@@ -8,7 +8,7 @@ const CONFIG = {
   CANVAS_HEIGHT: 600,
   MAX_LEVELS: 10,
   LIVES: 3,
-  PLAYER_SPEED: 8,
+  PLAYER_SPEED: 6,
   LASER_SPEED: 12,
   LASER_COOLDOWN: 150, // milliseconds
   BASE_ENEMY_SPEED: 1.5,
@@ -340,10 +340,10 @@ function levelUp() {
   game.level++;
   game.levelKills = 0;
 
-  if (game.level > CONFIG.MAX_LEVELS) {
-    winGame();
-    return;
-  }
+  // if (game.level > CONFIG.MAX_LEVELS) {
+  //   winGame();
+  //   return;
+  // }
 
   // Show level up screen
   elements.newLevel.textContent = game.level;
@@ -478,10 +478,10 @@ function updateLasers() {
 }
 
 function spawnEnemy() {
-  const size = 30 + Math.random() * 15;
+  const size = 60 + Math.random() * 30;
   const x = size / 2 + Math.random() * (CONFIG.CANVAS_WIDTH - size);
   const speed =
-    CONFIG.BASE_ENEMY_SPEED + (game.level - 1) * CONFIG.ENEMY_SPEED_INCREMENT;
+    CONFIG.BASE_ENEMY_SPEED + (Math.min(game.level, 5) - 1) * CONFIG.ENEMY_SPEED_INCREMENT;
 
   game.enemies.push({
     x: x,
