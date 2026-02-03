@@ -671,6 +671,7 @@ function drawPlayer() {
 
   ctx.save();
   ctx.translate(game.player.x, game.player.y);
+  ctx.globalCompositeOperation = "screen";
 
   // Invincibility flash
   if (game.player.invincible && Math.floor(Date.now() / 100) % 2 === 0) {
@@ -804,20 +805,17 @@ function drawEnemies() {
     ctx.save();
     ctx.translate(enemy.x, enemy.y);
     ctx.rotate(enemy.rotation);
+    ctx.globalCompositeOperation = "screen";
 
     if (assets.alien && assets.alien.complete) {
       // Draw only a portion of the sprite sheet (first alien)
-      ctx.drawImage(
-        assets.alien,
-        0,
-        0,
-        100,
-        100, // Source rectangle (first alien in sheet)
-        -enemy.width / 2,
-        -enemy.height / 2,
-        enemy.width,
-        enemy.height
-      );
+        ctx.drawImage(
+          assets.alien,
+          -enemy.width / 2,
+          -enemy.height / 2,
+          enemy.width,
+          enemy.height
+        );
     } else {
       // Draw procedural alien
       drawProceduralAlien(enemy);
