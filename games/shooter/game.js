@@ -6,8 +6,8 @@
 const CONFIG = {
   CANVAS_WIDTH: 800,
   CANVAS_HEIGHT: 600,
-  MAX_LEVELS: 10,
-  LIVES: 3,
+  MAX_LEVELS: 100,
+  LIVES: 5,
   PLAYER_SPEED: 6,
   LASER_SPEED: 12,
   LASER_COOLDOWN: 150, // milliseconds
@@ -123,7 +123,9 @@ function initElements() {
     lives: [
       document.getElementById("life1"),
       document.getElementById("life2"),
-      document.getElementById("life3")
+      document.getElementById("life3"),
+      document.getElementById("life4"),
+      document.getElementById("life5")
     ],
     mobileControls: document.getElementById("mobile-controls"),
     // Leaderboard elements
@@ -340,10 +342,10 @@ function levelUp() {
   game.level++;
   game.levelKills = 0;
 
-  // if (game.level > CONFIG.MAX_LEVELS) {
-  //   winGame();
-  //   return;
-  // }
+  if (game.level > CONFIG.MAX_LEVELS) {
+    winGame();
+    return;
+  }
 
   // Show level up screen
   elements.newLevel.textContent = game.level;
@@ -544,7 +546,8 @@ function checkCollisions() {
         updateHUD();
 
         // Check level up
-        if (game.levelKills >= CONFIG.KILLS_TO_ADVANCE) {
+        const killsNeeded = game.level * 5;
+        if (game.levelKills >= killsNeeded) {
           levelUp();
         }
       }
@@ -1008,7 +1011,8 @@ function saveHighScore() {
 function updateHUD() {
   elements.scoreDisplay.textContent = game.score.toLocaleString();
   elements.levelDisplay.textContent = game.level;
-  elements.killsDisplay.textContent = `${game.levelKills}/${CONFIG.KILLS_TO_ADVANCE}`;
+  const killsNeeded = game.level * 5;
+  elements.killsDisplay.textContent = `${game.levelKills}/${killsNeeded}`;
 }
 
 function updateLives() {

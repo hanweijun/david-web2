@@ -68,7 +68,9 @@
       /* Game Canvas */
       #gameCanvas {
         border: 3px solid var(--neon-cyan);
-        box-shadow: var(--glow-cyan), inset 0 0 50px rgba(0, 255, 255, 0.1);
+        box-shadow:
+          var(--glow-cyan),
+          inset 0 0 50px rgba(0, 255, 255, 0.1);
         border-radius: 10px;
         display: block;
       }
@@ -374,7 +376,9 @@
         font-family: var(--font-main);
         font-size: 2rem;
         color: var(--neon-yellow);
-        text-shadow: 0 0 10px #ffff00, 0 0 20px #ffff00;
+        text-shadow:
+          0 0 10px #ffff00,
+          0 0 20px #ffff00;
         z-index: 90;
       }
       /* Leaderboard Styles */
@@ -398,7 +402,8 @@
         letter-spacing: 2px;
       }
 
-      #high-score-list, #high-score-list-gameover {
+      #high-score-list,
+      #high-score-list-gameover {
         list-style: none;
         padding: 0;
       }
@@ -428,9 +433,18 @@
 
       /* Pulse animation for new high score input */
       @keyframes inputPulse {
-        0% { border-color: var(--neon-cyan); box-shadow: 0 0 5px var(--neon-cyan); }
-        50% { border-color: var(--neon-magenta); box-shadow: 0 0 15px var(--neon-magenta); }
-        100% { border-color: var(--neon-cyan); box-shadow: 0 0 5px var(--neon-cyan); }
+        0% {
+          border-color: var(--neon-cyan);
+          box-shadow: 0 0 5px var(--neon-cyan);
+        }
+        50% {
+          border-color: var(--neon-magenta);
+          box-shadow: 0 0 15px var(--neon-magenta);
+        }
+        100% {
+          border-color: var(--neon-cyan);
+          box-shadow: 0 0 5px var(--neon-cyan);
+        }
       }
 
       #initials-input {
@@ -470,6 +484,8 @@
               <div class="life" id="life1"></div>
               <div class="life" id="life2"></div>
               <div class="life" id="life3"></div>
+              <div class="life" id="life4"></div>
+              <div class="life" id="life5"></div>
             </div>
           </div>
         </div>
@@ -487,7 +503,7 @@
         <h1 class="screen-title">Neon Galaxy Blaster</h1>
         <p class="screen-subtitle">🚀 Space Shooter 🛸</p>
         <p class="game-info">
-          Blast through 10 levels of alien invaders! Earn points for each kill
+          Blast through 100 levels of alien invaders! Earn points for each kill
           and survive to victory!
         </p>
         <div class="controls-info">
@@ -499,7 +515,7 @@
         </div>
         <button class="play-button" id="start-btn">START GAME</button>
         <button class="back-button" id="back-btn">← BACK TO ARCADE</button>
-        
+
         <div id="leaderboard" class="leaderboard-section">
           <h3>LEADERBOARD</h3>
           <ul id="high-score-list">
@@ -512,12 +528,25 @@
       <div id="game-over-screen" class="hidden">
         <h1 class="screen-title">GAME OVER</h1>
         <p class="final-score">SCORE: <span id="final-score">0</span></p>
-        <p class="final-level">Level Reached: <span id="final-level">1</span></p>
-        
+        <p class="final-level">
+          Level Reached: <span id="final-level">1</span>
+        </p>
+
         <div id="new-high-score-entry" class="hidden">
-           <p class="new-record-msg">NEW HIGH SCORE!</p>
-           <input type="text" id="initials-input" maxlength="3" placeholder="AAA" />
-           <button id="save-score-btn" class="play-button" style="padding: 5px 20px; font-size: 0.9rem;">SAVE</button>
+          <p class="new-record-msg">NEW HIGH SCORE!</p>
+          <input
+            type="text"
+            id="initials-input"
+            maxlength="3"
+            placeholder="AAA"
+          />
+          <button
+            id="save-score-btn"
+            class="play-button"
+            style="padding: 5px 20px; font-size: 0.9rem"
+          >
+            SAVE
+          </button>
         </div>
 
         <div id="leaderboard-gameover" class="leaderboard-section hidden">
@@ -541,7 +570,7 @@
       <!-- Win Screen -->
       <div id="win-screen" class="hidden">
         <h1 class="screen-title">🎉 YOU WIN! 🎉</h1>
-        <p class="screen-subtitle">All 10 levels completed!</p>
+        <p class="screen-subtitle">All 100 levels completed!</p>
         <p class="final-score">FINAL SCORE: <span id="win-score">0</span></p>
         <button class="retry-button" id="play-again-btn">PLAY AGAIN</button>
         <button class="back-button" id="back-btn-win">← BACK TO ARCADE</button>
