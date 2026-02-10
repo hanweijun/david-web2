@@ -381,6 +381,33 @@
           0 0 20px #ffff00;
         z-index: 90;
       }
+
+      /* Audio Toggle Button */
+      #audio-toggle {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        z-index: 200;
+        width: 44px;
+        height: 44px;
+        background: rgba(10, 10, 15, 0.7);
+        border: 2px solid var(--neon-magenta);
+        border-radius: 50%;
+        color: var(--neon-magenta);
+        font-size: 1.3rem;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.3s ease;
+        pointer-events: all;
+      }
+
+      #audio-toggle:hover {
+        background: rgba(255, 0, 255, 0.2);
+        box-shadow: var(--glow-magenta);
+        transform: scale(1.1);
+      }
       /* Leaderboard Styles */
       .leaderboard-section {
         margin-top: 20px;
@@ -473,6 +500,9 @@
   <body>
     <div id="game-container">
       <canvas id="gameCanvas"></canvas>
+
+      <!-- Audio Toggle -->
+      <button id="audio-toggle" title="Mute / Unmute">🔊</button>
 
       <!-- HUD -->
       <div id="hud">
