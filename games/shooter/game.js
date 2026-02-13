@@ -12,7 +12,7 @@ const CONFIG = {
   LASER_SPEED: 12,
   LASER_COOLDOWN: 150, // milliseconds
   BASE_ENEMY_SPEED: 1.5,
-  ENEMY_SPEED_INCREMENT: 0.3, // per level
+  ENEMY_SPEED_INCREMENT: 0.06, // Reach ~5x base speed (7.5) at level 100
   BASE_POINTS_PER_KILL: 100,
   KILLS_TO_ADVANCE: 10, // enemies to kill per level
   SPAWN_INTERVAL_BASE: 1500, // milliseconds
@@ -958,22 +958,32 @@ function levelUp() {
 // GAME LOOP
 // ========================================
 
-function gameLoop() {
-  update();
+// ========================================
+// GAME LOOP
+// ========================================
+
+let lastTime = 0;
+
+function gameLoop(timestamp) {
+  if (!lastTime) lastTime = timestamp;
+  const deltaTime = (timestamp - lastTime) / 16.67; // Normalize to target 60 FPS (16.67ms per frame)
+  lastTime = timestamp;
+
+  update(deltaTime);
   render();
   requestAnimationFrame(gameLoop);
 }
 
-function update() {
+function update(deltaTime) {
   const now = Date.now();
 
   // Always update stars for background effect
-  updateStars();
+  updateStars(deltaTime);
 
   if (!game.running || game.paused) return;
 
   // Update player
-  updatePlayer();
+  updatePlayer(deltaTime);
 
   // Handle shooting
   if (
@@ -996,25 +1006,26 @@ function update() {
   }
 
   // Update game objects
-  updateLasers();
-  updateEnemies();
-  updateParticles();
+  updateLasers(deltaTime);
+  updateEnemies(deltaTime);
+  updateParticles(deltaTime);
 
   // Check collisions
   checkCollisions();
 
   // Update invincibility
   if (game.player.invincible) {
-    game.player.invincibleTimer--;
+    // Timer is also time-based now, reducing by 1 roughly every 16ms (1 frame at 60fps)
+    game.player.invincibleTimer -= 1 * deltaTime;
     if (game.player.invincibleTimer <= 0) {
       game.player.invincible = false;
     }
   }
 }
 
-function updateStars() {
+function updateStars(deltaTime) {
   game.stars.forEach((star) => {
-    star.y += star.speed;
+    star.y += star.speed * deltaTime;
     if (star.y > CONFIG.CANVAS_HEIGHT) {
       star.y = 0;
       star.x = Math.random() * CONFIG.CANVAS_WIDTH;
@@ -1023,17 +1034,17 @@ function updateStars() {
   });
 }
 
-function updatePlayer() {
+function updatePlayer(deltaTime) {
   const moveLeft =
     game.keys["arrowleft"] || game.keys["ArrowLeft"] || game.keys["a"];
   const moveRight =
     game.keys["arrowright"] || game.keys["ArrowRight"] || game.keys["d"];
 
   if (moveLeft) {
-    game.player.x -= CONFIG.PLAYER_SPEED;
+    game.player.x -= CONFIG.PLAYER_SPEED * deltaTime;
   }
   if (moveRight) {
-    game.player.x += CONFIG.PLAYER_SPEED;
+    game.player.x += CONFIG.PLAYER_SPEED * deltaTime;
   }
 
   // Keep player in bounds
@@ -1066,9 +1077,9 @@ function shootLaser() {
   AudioManager.playLaser();
 }
 
-function updateLasers() {
+function updateLasers(deltaTime) {
   game.lasers = game.lasers.filter((laser) => {
-    laser.y -= laser.speed;
+    laser.y -= laser.speed * deltaTime;
     return laser.y > -laser.height;
   });
 }
@@ -1077,7 +1088,7 @@ function spawnEnemy() {
   const size = 60 + Math.random() * 30;
   const x = size / 2 + Math.random() * (CONFIG.CANVAS_WIDTH - size);
   const speed =
-    CONFIG.BASE_ENEMY_SPEED + (Math.min(game.level, 5) - 1) * CONFIG.ENEMY_SPEED_INCREMENT;
+    CONFIG.BASE_ENEMY_SPEED + (game.level - 1) * CONFIG.ENEMY_SPEED_INCREMENT;
 
   game.enemies.push({
     x: x,
@@ -1090,10 +1101,10 @@ function spawnEnemy() {
   });
 }
 
-function updateEnemies() {
+function updateEnemies(deltaTime) {
   game.enemies = game.enemies.filter((enemy) => {
-    enemy.y += enemy.speed;
-    enemy.rotation += enemy.rotationSpeed;
+    enemy.y += enemy.speed * deltaTime;
+    enemy.rotation += enemy.rotationSpeed * deltaTime;
 
     // Enemy reached bottom
     if (enemy.y > CONFIG.CANVAS_HEIGHT + enemy.height) {
@@ -1104,12 +1115,12 @@ function updateEnemies() {
   });
 }
 
-function updateParticles() {
+function updateParticles(deltaTime) {
   game.particles = game.particles.filter((particle) => {
-    particle.x += particle.vx;
-    particle.y += particle.vy;
-    particle.life -= particle.decay;
-    particle.size *= 0.95;
+    particle.x += particle.vx * deltaTime;
+    particle.y += particle.vy * deltaTime;
+    particle.life -= particle.decay * deltaTime;
+    particle.size *= Math.pow(0.95, deltaTime); // Time-based scaling
     return particle.life > 0 && particle.size > 0.5;
   });
 }
